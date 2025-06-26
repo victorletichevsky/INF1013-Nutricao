@@ -5,6 +5,7 @@ from .tela_pratos import TelaPratos
 from .tela_plano_diario import TelaPlanoDiario
 from .tela_consumo_calorico import TelaConsumoCalórico
 from .tela_historico import TelaHistorico
+from .tela_progresso_semanal import TelaProgressoSemanal
 
 class MainWindow(tk.Frame):
     def __init__(self, parent):
@@ -42,7 +43,7 @@ class MainWindow(tk.Frame):
 
     def open_progresso_semanal(self):
         self.clear_content()
-        tk.Label(self.content_frame, text="Progresso Semanal", font=("Arial", 18), bg="white").pack(pady=20)
+        TelaProgressoSemanal(self.content_frame)
 
     def open_lista_pratos(self):
         self.clear_content()
