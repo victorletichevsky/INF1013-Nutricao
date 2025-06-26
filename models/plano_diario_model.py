@@ -10,7 +10,9 @@ class PlanoDiarioModel:
             'SELECT * FROM planos_diarios WHERE id_usuario = ? AND data = ?',
             (id_usuario, data)
         )
-        return cursor.fetchone()
+        result = cursor.fetchone()
+        conn.close()
+        return result
 
     @staticmethod
     def create(id_usuario, data):

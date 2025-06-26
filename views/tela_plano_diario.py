@@ -4,6 +4,7 @@ from datetime import date
 from utils.session import get_usuario
 from controllers.plano_diario_controller import PlanoDiarioController
 from controllers.prato_controller import PratoController
+from utils.tipos_refeicao import obter_tipos_disponiveis, obter_nome_tipo
 
 class TelaPlanoDiario(tk.Frame):
     def __init__(self, parent):
@@ -16,7 +17,7 @@ class TelaPlanoDiario(tk.Frame):
         tk.Label(self, text="Data (YYYY-MM-DD):", bg="white").pack()
         tk.Entry(self, textvariable=self.data_var).pack()
 
-        ttk.Button(self, text="Carregar plano", command=self.carregar_plano).pack(pady=10)
+        ttk.Button(self, text="Selecionar Data", command=self.carregar_plano).pack(pady=10)
 
         self.frame_adicionar = tk.Frame(self, bg="white")
         self.frame_adicionar.pack(pady=10)
@@ -25,9 +26,11 @@ class TelaPlanoDiario(tk.Frame):
         self.entry_nome_refeicao = tk.Entry(self.frame_adicionar)
         self.entry_nome_refeicao.grid(row=0, column=1, padx=5, pady=5)
 
-        tk.Label(self.frame_adicionar, text="Tipo (0=Café, 1=Almoço...):", bg="white").grid(row=1, column=0)
-        self.entry_tipo = tk.Entry(self.frame_adicionar)
-        self.entry_tipo.grid(row=1, column=1)
+        tk.Label(self.frame_adicionar, text="Tipo:", bg="white").grid(row=1, column=0)
+        self.combo_tipos = ttk.Combobox(self.frame_adicionar, state="readonly")
+        tipos = obter_tipos_disponiveis()
+        self.combo_tipos["values"] = [f"{codigo} - {nome}" for codigo, nome in tipos]
+        self.combo_tipos.grid(row=1, column=1)
 
         tk.Label(self.frame_adicionar, text="Prato:", bg="white").grid(row=2, column=0)
         self.combo_pratos = ttk.Combobox(self.frame_adicionar, state="readonly")
@@ -67,18 +70,14 @@ class TelaPlanoDiario(tk.Frame):
             return
 
         nome = self.entry_nome_refeicao.get()
-        tipo = self.entry_tipo.get()
+        tipo_selecionado = self.combo_tipos.get()
         prato_nome = self.combo_pratos.get()
 
-        if not nome or not tipo or not prato_nome:
+        if not nome or not tipo_selecionado or not prato_nome:
             messagebox.showwarning("Campos obrigatórios", "Preencha todos os campos.")
             return
 
-        try:
-            tipo = int(tipo)
-        except ValueError:
-            messagebox.showerror("Erro", "Tipo deve ser um número.")
-            return
+        tipo = int(tipo_selecionado.split(" - ")[0])
 
         id_prato = self.dict_pratos[prato_nome]
         PlanoDiarioController.adicionar_refeicao(self.id_plano, nome, tipo, self.data_var.get(), id_prato)
@@ -90,7 +89,8 @@ class TelaPlanoDiario(tk.Frame):
         self.dict_refeicoes = {}
 
         for r in refeicoes:
-            desc = f"{r['nome_refeicao']} - {r['prato_nome']} - {'OK' if r['realizada'] else 'PENDENTE'}"
+            tipo_nome = obter_nome_tipo(r['tipo'])
+            desc = f"{r['nome_refeicao']} ({tipo_nome}) - {r['prato_nome']} - {'OK' if r['realizada'] else 'PENDENTE'}"
             self.lista.insert(tk.END, desc)
             self.dict_refeicoes[desc] = r["id_refeicao"]
 

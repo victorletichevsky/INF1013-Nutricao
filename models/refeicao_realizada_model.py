@@ -27,13 +27,16 @@ class RefeicaoRealizadaModel:
         conn = get_connection()
         cursor = conn.cursor()
         cursor.execute('''
-            SELECT DISTINCT rr.id_refeicao, r.nome_refeicao, p.nome AS prato_nome, rr.realizada
+            SELECT DISTINCT rr.id_refeicao, r.nome_refeicao, p.nome AS prato_nome, rr.realizada, r.tipo
             FROM refeicoes_realizadas rr
             JOIN refeicoes r ON r.id_refeicao = rr.id_refeicao
             JOIN pratos p ON p.id_prato = rr.id_prato
             WHERE rr.id_plano = ?
+            ORDER BY r.tipo, r.nome_refeicao
         ''', (id_plano,))
-        return cursor.fetchall()
+        result = cursor.fetchall()
+        conn.close()
+        return result
 
     @staticmethod
     def excluir(id_refeicao):

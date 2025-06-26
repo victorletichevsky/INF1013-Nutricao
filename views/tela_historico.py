@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from controllers.historico_controller import HistoricoController
 from utils.session import get_usuario
+from utils.tipos_refeicao import obter_nome_tipo
 
 class TelaHistorico(tk.Frame):
     def __init__(self, parent):
@@ -35,9 +36,10 @@ class TelaHistorico(tk.Frame):
         for refeicao in historico:
             status = "✅" if refeicao["realizada"] else "❌"
             calorias = f"{refeicao['calorias_totais']:.1f} kcal"
+            tipo_nome = obter_nome_tipo(refeicao["tipo"])
             self.tree.insert("", "end", values=(
                 refeicao["nome_refeicao"],
-                refeicao["tipo"],
+                tipo_nome,
                 refeicao["data"],
                 refeicao["prato_nome"],
                 calorias,
