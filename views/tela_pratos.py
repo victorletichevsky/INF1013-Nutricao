@@ -52,6 +52,18 @@ class TelaPratos(tk.Frame):
         self.lista_ingredientes = tk.Listbox(self)
         self.lista_ingredientes.pack(pady=10, fill="x", padx=10)
 
+        # Frame para excluir ingrediente do prato
+        self.excluir_frame = tk.Frame(self, bg="white")
+        self.excluir_frame.pack(pady=10)
+
+        tk.Label(self.excluir_frame, text="Excluir ingrediente:", bg="white").grid(row=0, column=0, padx=5, pady=5)
+        self.combo_ingredientes_prato = ttk.Combobox(self.excluir_frame, state="readonly")
+        self.combo_ingredientes_prato.grid(row=0, column=1, padx=5, pady=5)
+
+        self.btn_excluir_ingrediente = ttk.Button(
+            self.excluir_frame, text="Excluir do prato", command=self.excluir_ingrediente_do_prato)
+        self.btn_excluir_ingrediente.grid(row=0, column=2, padx=5, pady=5)
+
         self.atualizar_lista()
         self.carregar_ingredientes_combo()
 
@@ -133,15 +145,34 @@ class TelaPratos(tk.Frame):
         self.lista_ingredientes.delete(0, tk.END)
         ingredientes = PratoController.listar_ingredientes_do_prato(self.id_prato_em_edicao)
         total_calorias = 0
+        nomes_ingredientes = []
 
         for ing in ingredientes:
             cal = ing["calorias_100g"] * (ing["quantidade_gramas"] / 100)
             total_calorias += cal
             self.lista_ingredientes.insert(tk.END, f'{ing["nome"]} - {ing["quantidade_gramas"]}g - {cal:.1f} kcal')
+            nomes_ingredientes.append(ing["nome"])
 
         self.label_calorias.config(text=f"Total de calorias: {total_calorias:.1f} kcal")
+        self.combo_ingredientes_prato["values"] = nomes_ingredientes
 
 
+
+    def excluir_ingrediente_do_prato(self):
+        if not self.id_prato_em_edicao:
+            messagebox.showwarning("Aviso", "Selecione um prato primeiro.")
+            return
+
+        nome_ingrediente = self.combo_ingredientes_prato.get()
+        if not nome_ingrediente:
+            messagebox.showwarning("Aviso", "Selecione um ingrediente para excluir.")
+            return
+
+        confirm = messagebox.askyesno("Confirmação", f"Tem certeza que deseja excluir '{nome_ingrediente}' deste prato?")
+        if confirm:
+            PratoController.remover_ingrediente(self.id_prato_em_edicao, nome_ingrediente)
+            messagebox.showinfo("Sucesso", "Ingrediente removido do prato com sucesso.")
+            self.atualizar_ingredientes_do_prato()
 
     def excluir_prato(self):
         item = self.tree.selection()
@@ -161,4 +192,5 @@ class TelaPratos(tk.Frame):
             self.btn_salvar.config(text="Adicionar Prato")
             self.lista_ingredientes.delete(0, tk.END)
             self.label_calorias.config(text="")
+            self.combo_ingredientes_prato["values"] = []
             self.atualizar_lista()

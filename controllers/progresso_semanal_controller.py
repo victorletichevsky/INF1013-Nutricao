@@ -17,15 +17,16 @@ class ProgressoSemanalController:
         dados_formatados = []
         dias_semana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
         
-        for i, dia_data in enumerate(self._gerar_datas_semana(progresso['data_inicio'])):
-            dia_dados = next((d for d in progresso['dados_diarios'] if str(d['data']) == str(dia_data)), None)
+        # Os dados já vêm completos do modelo
+        for i, dia_dados in enumerate(progresso['dados_diarios']):
+            data_dia = progresso['data_inicio'] + timedelta(days=i)
             
             dados_formatados.append({
                 'dia_semana': dias_semana[i],
-                'data': dia_data,
-                'calorias': dia_dados['calorias_consumidas'] if dia_dados else 0,
-                'refeicoes_realizadas': dia_dados['refeicoes_realizadas'] if dia_dados else 0,
-                'refeicoes_planejadas': dia_dados['refeicoes_planejadas'] if dia_dados else 0
+                'data': data_dia,
+                'calorias': dia_dados['calorias_consumidas'],
+                'refeicoes_realizadas': dia_dados['refeicoes_realizadas'],
+                'refeicoes_planejadas': dia_dados['refeicoes_planejadas']
             })
         
         return dados_formatados
