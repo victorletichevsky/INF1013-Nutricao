@@ -3,6 +3,7 @@ from tkinter import ttk
 from .tela_ingredientes import TelaIngredientes
 from .tela_pratos import TelaPratos
 from .tela_plano_diario import TelaPlanoDiario
+from .tela_consumo_calorico import TelaConsumoCalórico
 from .tela_historico import TelaHistorico
 
 class MainWindow(tk.Frame):
@@ -53,7 +54,7 @@ class MainWindow(tk.Frame):
 
     def open_consumo_calorico(self):
         self.clear_content()
-        tk.Label(self.content_frame, text="Consumo Calórico", font=("Arial", 18), bg="white").pack(pady=20)
+        TelaConsumoCalórico(self.content_frame).pack(expand=True, fill="both")
 
     def open_historico_refeicoes(self):
         self.clear_content()
