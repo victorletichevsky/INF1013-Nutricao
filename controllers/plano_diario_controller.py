@@ -22,3 +22,8 @@ class PlanoDiarioController:
     @staticmethod
     def marcar_realizada(id_refeicao, realizada):
         RefeicaoRealizadaModel.marcar_como_realizada(id_refeicao, realizada)
+
+    @staticmethod
+    def excluir_refeicao(id_refeicao):
+        RefeicaoRealizadaModel.excluir(id_refeicao)
+        RefeicaoModel.delete(id_refeicao)

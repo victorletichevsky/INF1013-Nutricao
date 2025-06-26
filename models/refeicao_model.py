@@ -14,3 +14,11 @@ class RefeicaoModel:
         conn.commit()
         conn.close()
         return id_refeicao
+
+    @staticmethod
+    def delete(id_refeicao):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM refeicoes WHERE id_refeicao = ?', (id_refeicao,))
+        conn.commit()
+        conn.close()

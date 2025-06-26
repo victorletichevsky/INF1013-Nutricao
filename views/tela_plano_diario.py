@@ -38,7 +38,11 @@ class TelaPlanoDiario(tk.Frame):
         self.lista = tk.Listbox(self)
         self.lista.pack(fill="x", padx=20, pady=10)
 
-        ttk.Button(self, text="Marcar como realizada", command=self.marcar_realizada).pack(pady=5)
+        button_frame = tk.Frame(self, bg="white")
+        button_frame.pack(pady=5)
+        
+        ttk.Button(button_frame, text="Marcar como realizada", command=self.marcar_realizada).pack(side="left", padx=5)
+        ttk.Button(button_frame, text="Excluir refeição", command=self.excluir_refeicao).pack(side="left", padx=5)
 
     def carregar_plano(self):
         usuario = get_usuario()
@@ -99,3 +103,17 @@ class TelaPlanoDiario(tk.Frame):
         id_refeicao = self.dict_refeicoes[texto]
         PlanoDiarioController.marcar_realizada(id_refeicao, 1)
         self.carregar_refeicoes()
+
+    def excluir_refeicao(self):
+        sel = self.lista.curselection()
+        if not sel:
+            messagebox.showwarning("Aviso", "Selecione uma refeição.")
+            return
+        
+        texto = self.lista.get(sel[0])
+        confirm = messagebox.askyesno("Confirmação", "Tem certeza que deseja excluir esta refeição?")
+        if confirm:
+            id_refeicao = self.dict_refeicoes[texto]
+            PlanoDiarioController.excluir_refeicao(id_refeicao)
+            messagebox.showinfo("Sucesso", "Refeição excluída com sucesso!")
+            self.carregar_refeicoes()
