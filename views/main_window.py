@@ -3,6 +3,7 @@ from tkinter import ttk
 from .tela_ingredientes import TelaIngredientes
 from .tela_pratos import TelaPratos
 from .tela_plano_diario import TelaPlanoDiario
+from .tela_historico import TelaHistorico
 
 class MainWindow(tk.Frame):
     def __init__(self, parent):
@@ -56,4 +57,4 @@ class MainWindow(tk.Frame):
 
     def open_historico_refeicoes(self):
         self.clear_content()
-        tk.Label(self.content_frame, text="Histórico de Refeições", font=("Arial", 18), bg="white").pack(pady=20)
+        TelaHistorico(self.content_frame).pack(expand=True, fill="both")
