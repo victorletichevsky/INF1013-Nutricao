@@ -16,6 +16,7 @@ class App(tk.Tk):
     def check_usuario(self):
         usuario = UsuarioController.buscar_primeiro_usuario()
         if usuario:
+            set_usuario(usuario)
             self.exibir_main_window()
         else:
             self.exibir_tela_inicial()
@@ -33,13 +34,6 @@ class App(tk.Tk):
     def clear_tela_atual(self):
         for widget in self.winfo_children():
             widget.destroy()
-    def check_usuario(self):
-        usuario = UsuarioController.buscar_primeiro_usuario()
-        if usuario:
-            set_usuario(usuario)  
-            self.exibir_main_window()
-        else:
-            self.exibir_tela_inicial()
             
 if __name__ == "__main__":
     app = App()

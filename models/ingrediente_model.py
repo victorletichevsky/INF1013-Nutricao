@@ -43,3 +43,11 @@ class IngredienteModel:
         cursor.execute('SELECT * FROM ingredientes WHERE nome = ?', (nome,))
         return cursor.fetchone()
 
+    @staticmethod
+    def delete(id_ingrediente):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM ingredientes WHERE id_ingrediente = ?', (id_ingrediente,))
+        conn.commit()
+        conn.close()
+

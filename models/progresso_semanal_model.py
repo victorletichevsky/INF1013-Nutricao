@@ -16,7 +16,7 @@ class ProgressoSemanalModel:
         # Consumo calórico por dia da semana
         cursor.execute('''
             SELECT pd.data, 
-                   COALESCE(SUM((i.calorias_100g * pi.quantidade_gramas) / 100.0), 0) as calorias_consumidas,
+                   COALESCE(SUM(CASE WHEN rr.realizada = 1 THEN (i.calorias_100g * pi.quantidade_gramas) / 100.0 ELSE 0 END), 0) as calorias_consumidas,
                    COUNT(DISTINCT CASE WHEN rr.realizada = 1 THEN rr.id_refeicao END) as refeicoes_realizadas,
                    COUNT(DISTINCT rr.id_refeicao) as refeicoes_planejadas
             FROM planos_diarios pd

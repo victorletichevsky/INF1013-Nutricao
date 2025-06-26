@@ -35,3 +35,12 @@ class PratoModel:
         pratos = cursor.fetchall()
         conn.close()
         return pratos
+
+    @staticmethod
+    def delete(id_prato):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM prato_ingredientes WHERE id_prato = ?', (id_prato,))
+        cursor.execute('DELETE FROM pratos WHERE id_prato = ?', (id_prato,))
+        conn.commit()
+        conn.close()

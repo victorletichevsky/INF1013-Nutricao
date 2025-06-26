@@ -25,3 +25,7 @@ class PratoController:
     @staticmethod
     def remover_ingrediente(id_prato, nome_ingrediente):
         PratoIngredienteModel.remover_ingrediente(id_prato, nome_ingrediente)
+
+    @staticmethod
+    def excluir_prato(id_prato):
+        PratoModel.delete(id_prato)

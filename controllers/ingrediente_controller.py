@@ -9,4 +9,6 @@ class IngredienteController:
     def listar_ingredientes():
         return IngredienteModel.get_all()
     
-    
+    @staticmethod
+    def excluir_ingrediente(id_ingrediente):
+        return IngredienteModel.delete(id_ingrediente)

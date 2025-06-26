@@ -8,7 +8,7 @@ class TelaInicial(tk.Frame):
         super().__init__(parent, bg="white")
         self.on_success_callback = on_success_callback
 
-        tk.Label(self, text="Tela Inicial", font=("Arial", 20), bg="white").pack(pady=20)
+        tk.Label(self, text="Bem-vindo!", font=("Arial", 20), bg="white").pack(pady=20, expand=True)
 
         tk.Label(self, text="Nome do usuário:", bg="white").pack(pady=5)
         self.entry_nome = tk.Entry(self)

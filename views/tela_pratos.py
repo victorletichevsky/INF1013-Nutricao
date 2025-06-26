@@ -26,7 +26,10 @@ class TelaPratos(tk.Frame):
         self.entry_nome.grid(row=0, column=1, padx=5, pady=5)
 
         self.btn_salvar = ttk.Button(self.form_frame, text="Adicionar Prato", command=self.salvar_prato)
-        self.btn_salvar.grid(row=1, columnspan=2, pady=10)
+        self.btn_salvar.grid(row=1, column=0, pady=10, padx=5)
+        
+        self.btn_excluir_prato = ttk.Button(self.form_frame, text="Excluir Prato", command=self.excluir_prato)
+        self.btn_excluir_prato.grid(row=1, column=1, pady=10, padx=5)
 
         self.ingrediente_frame = tk.Frame(self, bg="white")
         self.ingrediente_frame.pack(pady=10)
@@ -48,10 +51,6 @@ class TelaPratos(tk.Frame):
 
         self.lista_ingredientes = tk.Listbox(self)
         self.lista_ingredientes.pack(pady=10, fill="x", padx=10)
-
-        self.btn_remover_ingrediente = ttk.Button(
-            self, text="Remover ingrediente selecionado", command=self.remover_ingrediente)
-        self.btn_remover_ingrediente.pack(pady=5)
 
         self.atualizar_lista()
         self.carregar_ingredientes_combo()
@@ -142,16 +141,24 @@ class TelaPratos(tk.Frame):
 
         self.label_calorias.config(text=f"Total de calorias: {total_calorias:.1f} kcal")
 
-    def remover_ingrediente(self):
-        selecionado = self.lista_ingredientes.curselection()
-        if not selecionado:
-            messagebox.showwarning("Aviso", "Selecione um ingrediente para remover.")
+
+
+    def excluir_prato(self):
+        item = self.tree.selection()
+        if not item:
+            messagebox.showwarning("Aviso", "Selecione um prato para excluir.")
             return
-
-        texto = self.lista_ingredientes.get(selecionado[0])
-        nome_ingrediente = texto.split(" - ")[0]
-
-        confirm = messagebox.askyesno("Confirmação", f"Remover '{nome_ingrediente}' do prato?")
+        
+        values = self.tree.item(item, "values")
+        nome_prato = values[1]
+        
+        confirm = messagebox.askyesno("Confirmação", f"Tem certeza que deseja excluir o prato '{nome_prato}'?")
         if confirm:
-            PratoController.remover_ingrediente(self.id_prato_em_edicao, nome_ingrediente)
-            self.atualizar_ingredientes_do_prato()
+            PratoController.excluir_prato(values[0])
+            messagebox.showinfo("Sucesso", "Prato excluído com sucesso.")
+            self.entry_nome.delete(0, tk.END)
+            self.id_prato_em_edicao = None
+            self.btn_salvar.config(text="Adicionar Prato")
+            self.lista_ingredientes.delete(0, tk.END)
+            self.label_calorias.config(text="")
+            self.atualizar_lista()

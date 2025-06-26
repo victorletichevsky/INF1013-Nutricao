@@ -32,7 +32,10 @@ class TelaIngredientes(tk.Frame):
         self.entry_calorias.grid(row=1, column=1, padx=5, pady=5)
 
         self.btn_salvar = ttk.Button(self.form_frame, text="Adicionar", command=self.salvar)
-        self.btn_salvar.grid(row=2, columnspan=2, pady=10)
+        self.btn_salvar.grid(row=2, column=0, pady=10, padx=5)
+        
+        self.btn_excluir = ttk.Button(self.form_frame, text="Excluir", command=self.excluir_ingrediente)
+        self.btn_excluir.grid(row=2, column=1, pady=10, padx=5)
 
         self.atualizar_lista()
 
@@ -84,3 +87,22 @@ class TelaIngredientes(tk.Frame):
         self.entry_nome.insert(0, values[1])
         self.entry_calorias.insert(0, values[2])
         self.btn_salvar.config(text="Salvar")
+
+    def excluir_ingrediente(self):
+        item = self.tree.selection()
+        if not item:
+            messagebox.showwarning("Aviso", "Selecione um ingrediente para excluir.")
+            return
+        
+        values = self.tree.item(item, "values")
+        nome_ingrediente = values[1]
+        
+        confirm = messagebox.askyesno("Confirmação", f"Tem certeza que deseja excluir '{nome_ingrediente}'?")
+        if confirm:
+            IngredienteController.excluir_ingrediente(values[0])
+            messagebox.showinfo("Sucesso", "Ingrediente excluído com sucesso.")
+            self.entry_nome.delete(0, tk.END)
+            self.entry_calorias.delete(0, tk.END)
+            self.ingrediente_em_edicao = None
+            self.btn_salvar.config(text="Adicionar")
+            self.atualizar_lista()
